@@ -119,8 +119,8 @@ def load_jobs_from_db(application: Application, reminder_callback: JobCallback):
                 }
                 missed_time = now - next_run_time
                 interval_delta = intervals[interval]
-
-                next_run_time += missed_time * interval_delta
+                missed_intervals = (missed_time // interval_delta) + 1
+                next_run_time += missed_intervals * interval_delta
                 update_job_next_run_time(job_id, next_run_time.isoformat())
             else:
                 # Remove non-repeating jobs with past run times
