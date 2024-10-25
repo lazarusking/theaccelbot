@@ -4,12 +4,9 @@ from telegram import (
 from telegram.ext import (
     Application,
     CommandHandler,
-    MessageHandler,
-    filters,
 )
 
 from db import init_db, load_jobs_from_db
-from settings import BOT_TOKEN
 from handlers.command_handlers import (
     cancel_job,
     help,
@@ -17,9 +14,9 @@ from handlers.command_handlers import (
     reminder_callback,
     set_msg,
     start,
-    unknown,
     view_reminders,
 )
+from settings import BOT_TOKEN
 
 
 async def post_init(application: Application):
@@ -48,7 +45,7 @@ def main():
     application.add_handler(CommandHandler("help", help))
     application.add_handler(CommandHandler("all", view_reminders))
     application.add_handler(CommandHandler("cancel", cancel_job))
-    application.add_handler(MessageHandler(filters.COMMAND, unknown))
+    # application.add_handler(MessageHandler(filters.COMMAND, unknown))
 
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 
