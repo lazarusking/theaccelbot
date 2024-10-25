@@ -96,8 +96,8 @@ async def set_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else None
     )
     message = reply if reply else " ".join(context.args[:-1])
-    pprint(reply)
-    print("________________")
+    # pprint(reply)
+    # print("________________")
     try:
         time_period = context.args[-1]
         time_units = {
@@ -148,15 +148,15 @@ async def set_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
             name=str(chat_id),
             data=message,
         )
-        print(job.job, "job instance")
-        print(job.job.id)
+        # print(job.job, "job instance")
+        # print(job.job.id)
         # text = "Timer successfully set!"
 
         # if job_removed:
         #     text += " Old one was removed."
 
         # await update.effective_message.reply_text(text)
-        print(len(context.job_queue.jobs()))
+        # print(len(context.job_queue.jobs()))
         # job = context.job_queue.run_once(callback_minute, interval=5, first=5)
         context.chat_data["job"] = job
         # save the job to the db
@@ -181,8 +181,8 @@ async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else None
     )
     message = reply if reply else " ".join(context.args[:-1])
-    pprint(reply)
-    print("________________")
+    # pprint(reply)
+    # print("________________")
     try:
         interval = context.args[-1].lower()
         intervals = {
@@ -246,8 +246,8 @@ async def view_reminders(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user = chat_member.user
         # print(job.next_t)
         next_run_time = datetime.fromisoformat(job["next_run_time"])
-        text += f"\#{i}\. [{str(job['message'])}](tg://user?id=) \- _{format_time_left(next_run_time)}_ left \- {user.mention_markdown_v2()}\n"
-    await update.message.reply_markdown_v2(text)
+        text += f"#{i}. <a href='tg://user?id='>{str(job['message'])} </a> - <i>{format_time_left(next_run_time)} left - {user.mention_html()}</i>\n"
+    await update.message.reply_text(text, parse_mode=ParseMode.HTML)
 
 
 @mygroup_admins_or_personal_only
