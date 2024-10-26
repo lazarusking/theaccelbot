@@ -263,11 +263,13 @@ async def cancel_job(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("No reminders set.")
             return
 
-        if int(job_id) >= len(jobs) or int(job_id) >= len(list(db_jobs)):
+        if int(job_id) >= len(jobs):
             await update.message.reply_text("Invalid job ID.")
             return
         # get the job from db list using the index from telegram
-        db_job = db_jobs[int(job_id)]
+        db_job = next(
+            (job for idx, job in enumerate(db_jobs) if idx == int(job_id)), None
+        )
         job = jobs[int(job_id)]
 
         db_job_id = db_job["id"]

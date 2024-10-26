@@ -7,7 +7,9 @@ from telegram.ext import (
 )
 from telegram.ext._utils.types import JobCallback
 
-DB_PATH = os.path.join(os.getenv('VOLUME_MOUNT_PATH', '.'), 'jobs.db')
+DB_PATH = os.path.join(os.getenv("VOLUME_MOUNT_PATH", "."), "jobs.db")
+
+
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
