@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from datetime import datetime, timedelta, timezone
 
@@ -6,9 +7,9 @@ from telegram.ext import (
 )
 from telegram.ext._utils.types import JobCallback
 
-
+DB_PATH = os.path.join(os.getenv('VOLUME_MOUNT_PATH', '.'), 'jobs.db')
 def init_db():
-    conn = sqlite3.connect("jobs.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
         """
@@ -34,7 +35,7 @@ def save_job_to_db(
     interval: str,
     next_run_time: str,
 ):
-    conn = sqlite3.connect("jobs.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
         """
@@ -51,7 +52,7 @@ def save_job_to_db(
 
 
 def remove_job_from_db(job_id: int):
-    conn = sqlite3.connect("jobs.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("DELETE FROM jobs WHERE id = ?", (job_id,))
     conn.commit()
@@ -59,7 +60,7 @@ def remove_job_from_db(job_id: int):
 
 
 def update_job_next_run_time(job_id: str, next_run_time: str):
-    conn = sqlite3.connect("jobs.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
         "UPDATE jobs SET next_run_time = ? WHERE id = ?",
@@ -71,7 +72,7 @@ def update_job_next_run_time(job_id: str, next_run_time: str):
 
 
 def get_jobs_from_db(chat_id: int):
-    conn = sqlite3.connect("jobs.db")
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute(
@@ -84,7 +85,7 @@ def get_jobs_from_db(chat_id: int):
 
 
 def get_job_from_db(job_id: int):
-    conn = sqlite3.connect("jobs.db")
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute(
@@ -97,7 +98,7 @@ def get_job_from_db(job_id: int):
 
 
 def load_jobs_from_db(application: Application, reminder_callback: JobCallback):
-    conn = sqlite3.connect("jobs.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
         "SELECT id,chat_id, user_id, message, interval, next_run_time FROM jobs"
